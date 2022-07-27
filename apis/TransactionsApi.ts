@@ -493,14 +493,14 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction400Response", ""
             ) as GetTransaction400Response;
-            throw new ApiException<GetTransaction400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<GetTransaction400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: GetTransaction404Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction404Response", ""
             ) as GetTransaction404Response;
-            throw new ApiException<GetTransaction404Response>(404, "Not Found", body, response.headers);
+            throw new ApiException<GetTransaction404Response>(response.httpStatusCode, "Not Found", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -561,21 +561,21 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "TransactionsResponse", ""
             ) as TransactionsResponse;
-            throw new ApiException<TransactionsResponse>(304, "Not modified (when preview is enabled)", body, response.headers);
+            throw new ApiException<TransactionsResponse>(response.httpStatusCode, "Not modified (when preview is enabled)", body, response.headers);
         }
         if (isCodeInRange("400", response.httpStatusCode)) {
             const body: CreateTransaction400Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CreateTransaction400Response", ""
             ) as CreateTransaction400Response;
-            throw new ApiException<CreateTransaction400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<CreateTransaction400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
         if (isCodeInRange("409", response.httpStatusCode)) {
             const body: CreateTransaction409Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CreateTransaction409Response", ""
             ) as CreateTransaction409Response;
-            throw new ApiException<CreateTransaction409Response>(409, "Conflict", body, response.headers);
+            throw new ApiException<CreateTransaction409Response>(response.httpStatusCode, "Conflict", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -611,14 +611,14 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CreateTransactions400Response", ""
             ) as CreateTransactions400Response;
-            throw new ApiException<CreateTransactions400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<CreateTransactions400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
         if (isCodeInRange("409", response.httpStatusCode)) {
             const body: CreateTransaction409Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "CreateTransaction409Response", ""
             ) as CreateTransaction409Response;
-            throw new ApiException<CreateTransaction409Response>(409, "Conflict", body, response.headers);
+            throw new ApiException<CreateTransaction409Response>(response.httpStatusCode, "Conflict", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -654,14 +654,14 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction400Response", ""
             ) as GetTransaction400Response;
-            throw new ApiException<GetTransaction400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<GetTransaction400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: GetTransaction404Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction404Response", ""
             ) as GetTransaction404Response;
-            throw new ApiException<GetTransaction404Response>(404, "Not Found", body, response.headers);
+            throw new ApiException<GetTransaction404Response>(response.httpStatusCode, "Not Found", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -697,7 +697,7 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "ListAccounts400Response", ""
             ) as ListAccounts400Response;
-            throw new ApiException<ListAccounts400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<ListAccounts400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
@@ -733,14 +733,14 @@ export class TransactionsApiResponseProcessor {
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction400Response", ""
             ) as GetTransaction400Response;
-            throw new ApiException<GetTransaction400Response>(400, "Bad Request", body, response.headers);
+            throw new ApiException<GetTransaction400Response>(response.httpStatusCode, "Bad Request", body, response.headers);
         }
         if (isCodeInRange("404", response.httpStatusCode)) {
             const body: GetTransaction404Response = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
                 "GetTransaction404Response", ""
             ) as GetTransaction404Response;
-            throw new ApiException<GetTransaction404Response>(404, "Not Found", body, response.headers);
+            throw new ApiException<GetTransaction404Response>(response.httpStatusCode, "Not Found", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
