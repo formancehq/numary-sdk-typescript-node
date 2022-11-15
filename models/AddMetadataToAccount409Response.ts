@@ -12,28 +12,28 @@
 
 import { HttpFile } from '../http/http';
 
-export class LedgerStorage {
-    'driver': string;
-    'ledgers': Array<string>;
+export class AddMetadataToAccount409Response {
+    'errorCode': string;
+    'errorMessage'?: string;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "driver",
-            "baseName": "driver",
+            "name": "errorCode",
+            "baseName": "error_code",
             "type": "string",
             "format": ""
         },
         {
-            "name": "ledgers",
-            "baseName": "ledgers",
-            "type": "Array<string>",
+            "name": "errorMessage",
+            "baseName": "error_message",
+            "type": "string",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return LedgerStorage.attributeTypeMap;
+        return AddMetadataToAccount409Response.attributeTypeMap;
     }
 
     public constructor() {
