@@ -10,24 +10,30 @@
  * Do not edit the class manually.
  */
 
-import { TransactionData } from '../models/TransactionData';
 import { HttpFile } from '../http/http';
 
-export class Transactions {
-    'transactions': Array<TransactionData>;
+export class PostTransactionScript {
+    'plain': string;
+    'vars'?: any;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "transactions",
-            "baseName": "transactions",
-            "type": "Array<TransactionData>",
+            "name": "plain",
+            "baseName": "plain",
+            "type": "string",
+            "format": ""
+        },
+        {
+            "name": "vars",
+            "baseName": "vars",
+            "type": "any",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return Transactions.attributeTypeMap;
+        return PostTransactionScript.attributeTypeMap;
     }
 
     public constructor() {

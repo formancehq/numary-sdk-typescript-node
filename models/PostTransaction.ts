@@ -10,12 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { PostTransactionScript } from '../models/PostTransactionScript';
 import { Posting } from '../models/Posting';
 import { HttpFile } from '../http/http';
 
-export class TransactionData {
+export class PostTransaction {
     'timestamp'?: Date;
-    'postings': Array<Posting>;
+    'postings'?: Array<Posting>;
+    'script'?: PostTransactionScript;
     'reference'?: string;
     'metadata'?: { [key: string]: any; };
 
@@ -35,6 +37,12 @@ export class TransactionData {
             "format": ""
         },
         {
+            "name": "script",
+            "baseName": "script",
+            "type": "PostTransactionScript",
+            "format": ""
+        },
+        {
             "name": "reference",
             "baseName": "reference",
             "type": "string",
@@ -48,7 +56,7 @@ export class TransactionData {
         }    ];
 
     static getAttributeTypeMap() {
-        return TransactionData.attributeTypeMap;
+        return PostTransaction.attributeTypeMap;
     }
 
     public constructor() {

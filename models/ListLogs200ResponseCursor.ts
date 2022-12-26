@@ -10,37 +10,52 @@
  * Do not edit the class manually.
  */
 
+import { Log } from '../models/Log';
 import { HttpFile } from '../http/http';
 
-export class Account {
-    'address': string;
-    'type'?: string;
-    'metadata'?: any;
+export class ListLogs200ResponseCursor {
+    'pageSize': number;
+    'hasMore'?: boolean;
+    'previous'?: string;
+    'next'?: string;
+    'data': Array<Log>;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "address",
-            "baseName": "address",
+            "name": "pageSize",
+            "baseName": "page_size",
+            "type": "number",
+            "format": "int64"
+        },
+        {
+            "name": "hasMore",
+            "baseName": "has_more",
+            "type": "boolean",
+            "format": ""
+        },
+        {
+            "name": "previous",
+            "baseName": "previous",
             "type": "string",
             "format": ""
         },
         {
-            "name": "type",
-            "baseName": "type",
+            "name": "next",
+            "baseName": "next",
             "type": "string",
             "format": ""
         },
         {
-            "name": "metadata",
-            "baseName": "metadata",
-            "type": "any",
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<Log>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return Account.attributeTypeMap;
+        return ListLogs200ResponseCursor.attributeTypeMap;
     }
 
     public constructor() {

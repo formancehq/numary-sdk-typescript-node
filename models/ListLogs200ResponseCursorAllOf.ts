@@ -10,24 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { TransactionData } from '../models/TransactionData';
+import { Log } from '../models/Log';
 import { HttpFile } from '../http/http';
 
-export class Transactions {
-    'transactions': Array<TransactionData>;
+export class ListLogs200ResponseCursorAllOf {
+    'data': Array<Log>;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "transactions",
-            "baseName": "transactions",
-            "type": "Array<TransactionData>",
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<Log>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return Transactions.attributeTypeMap;
+        return ListLogs200ResponseCursorAllOf.attributeTypeMap;
     }
 
     public constructor() {

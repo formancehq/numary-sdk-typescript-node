@@ -1,5 +1,4 @@
 import { ResponseContext, RequestContext, HttpFile } from '../http/http';
-import * as models from '../models/all';
 import { Configuration} from '../configuration'
 import { Observable, of, from } from '../rxjsStub';
 import {mergeMap, map} from  '../rxjsStub';
@@ -29,11 +28,17 @@ import { ListAccounts200Response } from '../models/ListAccounts200Response';
 import { ListAccounts200ResponseCursor } from '../models/ListAccounts200ResponseCursor';
 import { ListAccounts200ResponseCursorAllOf } from '../models/ListAccounts200ResponseCursorAllOf';
 import { ListAccounts400Response } from '../models/ListAccounts400Response';
+import { ListLogs200Response } from '../models/ListLogs200Response';
+import { ListLogs200ResponseCursor } from '../models/ListLogs200ResponseCursor';
+import { ListLogs200ResponseCursorAllOf } from '../models/ListLogs200ResponseCursorAllOf';
 import { ListTransactions200Response } from '../models/ListTransactions200Response';
 import { ListTransactions200ResponseCursor } from '../models/ListTransactions200ResponseCursor';
 import { ListTransactions200ResponseCursorAllOf } from '../models/ListTransactions200ResponseCursorAllOf';
+import { Log } from '../models/Log';
 import { Mapping } from '../models/Mapping';
 import { MappingResponse } from '../models/MappingResponse';
+import { PostTransaction } from '../models/PostTransaction';
+import { PostTransactionScript } from '../models/PostTransactionScript';
 import { Posting } from '../models/Posting';
 import { Script } from '../models/Script';
 import { ScriptResult } from '../models/ScriptResult';
@@ -146,7 +151,7 @@ export class ObservableAccountsApi {
      * @param metadata Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
      * @param balance Filter accounts by their balance (default operator is gte)
      * @param balanceOperator Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, or equal
-     * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
      */
     public listAccounts(ledger: string, pageSize?: number, after?: string, address?: string, metadata?: any, balance?: number, balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e', paginationToken?: string, _options?: Configuration): Observable<ListAccounts200Response> {
         const requestContextPromise = this.requestFactory.listAccounts(ledger, pageSize, after, address, metadata, balance, balanceOperator, paginationToken, _options);
@@ -190,7 +195,7 @@ export class ObservableBalancesApi {
      * @param ledger Name of the ledger.
      * @param address Filter balances involving given account, either as source or destination.
      * @param after Pagination cursor, will return accounts after given address, in descending order.
-     * @param paginationToken Parameter used in pagination requests.  Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results.
+     * @param paginationToken Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results.
      */
     public getBalances(ledger: string, address?: string, after?: string, paginationToken?: string, _options?: Configuration): Observable<GetBalances200Response> {
         const requestContextPromise = this.requestFactory.getBalances(ledger, address, after, paginationToken, _options);
@@ -232,6 +237,53 @@ export class ObservableBalancesApi {
                     middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
                 }
                 return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.getBalancesAggregated(rsp)));
+            }));
+    }
+
+}
+
+import { LogsApiRequestFactory, LogsApiResponseProcessor} from "../apis/LogsApi";
+export class ObservableLogsApi {
+    private requestFactory: LogsApiRequestFactory;
+    private responseProcessor: LogsApiResponseProcessor;
+    private configuration: Configuration;
+
+    public constructor(
+        configuration: Configuration,
+        requestFactory?: LogsApiRequestFactory,
+        responseProcessor?: LogsApiResponseProcessor
+    ) {
+        this.configuration = configuration;
+        this.requestFactory = requestFactory || new LogsApiRequestFactory(configuration);
+        this.responseProcessor = responseProcessor || new LogsApiResponseProcessor();
+    }
+
+    /**
+     * List the logs from a ledger, sorted by ID in descending order.
+     * List the logs from a ledger.
+     * @param ledger Name of the ledger.
+     * @param pageSize The maximum number of results to return per page
+     * @param after Pagination cursor, will return the logs after a given ID. (in descending order).
+     * @param startTime Filter logs that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute). 
+     * @param endTime Filter logs that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute). 
+     * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     */
+    public listLogs(ledger: string, pageSize?: number, after?: string, startTime?: string, endTime?: string, paginationToken?: string, _options?: Configuration): Observable<ListLogs200Response> {
+        const requestContextPromise = this.requestFactory.listLogs(ledger, pageSize, after, startTime, endTime, paginationToken, _options);
+
+        // build promise chain
+        let middlewarePreObservable = from<RequestContext>(requestContextPromise);
+        for (let middleware of this.configuration.middleware) {
+            middlewarePreObservable = middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => middleware.pre(ctx)));
+        }
+
+        return middlewarePreObservable.pipe(mergeMap((ctx: RequestContext) => this.configuration.httpApi.send(ctx))).
+            pipe(mergeMap((response: ResponseContext) => {
+                let middlewarePostObservable = of(response);
+                for (let middleware of this.configuration.middleware) {
+                    middlewarePostObservable = middlewarePostObservable.pipe(mergeMap((rsp: ResponseContext) => middleware.post(rsp)));
+                }
+                return middlewarePostObservable.pipe(map((rsp: ResponseContext) => this.responseProcessor.listLogs(rsp)));
             }));
     }
 
@@ -319,6 +371,7 @@ export class ObservableScriptApi {
     }
 
     /**
+     * This route is deprecated, and has been merged into `POST /{ledger}/transactions`. 
      * Execute a Numscript.
      * @param ledger Name of the ledger.
      * @param script 
@@ -472,13 +525,15 @@ export class ObservableTransactionsApi {
      * Count the transactions from a ledger.
      * @param ledger Name of the ledger.
      * @param reference Filter transactions by reference field.
-     * @param account Filter transactions with postings involving given account, either as source or destination.
-     * @param source Filter transactions with postings involving given account at source.
-     * @param destination Filter transactions with postings involving given account at destination.
+     * @param account Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
+     * @param source Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
+     * @param destination Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
+     * @param startTime Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute). 
+     * @param endTime Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute). 
      * @param metadata Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below.
      */
-    public countTransactions(ledger: string, reference?: string, account?: string, source?: string, destination?: string, metadata?: any, _options?: Configuration): Observable<void> {
-        const requestContextPromise = this.requestFactory.countTransactions(ledger, reference, account, source, destination, metadata, _options);
+    public countTransactions(ledger: string, reference?: string, account?: string, source?: string, destination?: string, startTime?: string, endTime?: string, metadata?: any, _options?: Configuration): Observable<void> {
+        const requestContextPromise = this.requestFactory.countTransactions(ledger, reference, account, source, destination, startTime, endTime, metadata, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -499,11 +554,11 @@ export class ObservableTransactionsApi {
     /**
      * Create a new transaction to a ledger.
      * @param ledger Name of the ledger.
-     * @param transactionData 
+     * @param postTransaction The request body must contain at least one of the following objects:   - &#x60;postings&#x60;: suitable for simple transactions   - &#x60;script&#x60;: enabling more complex transactions with Numscript 
      * @param preview Set the preview mode. Preview mode doesn&#39;t add the logs to the database or publish a message to the message broker.
      */
-    public createTransaction(ledger: string, transactionData: TransactionData, preview?: boolean, _options?: Configuration): Observable<TransactionsResponse> {
-        const requestContextPromise = this.requestFactory.createTransaction(ledger, transactionData, preview, _options);
+    public createTransaction(ledger: string, postTransaction: PostTransaction, preview?: boolean, _options?: Configuration): Observable<TransactionsResponse> {
+        const requestContextPromise = this.requestFactory.createTransaction(ledger, postTransaction, preview, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
@@ -576,12 +631,12 @@ export class ObservableTransactionsApi {
      * @param pageSize The maximum number of results to return per page
      * @param after Pagination cursor, will return transactions after given txid (in descending order).
      * @param reference Find transactions by reference field.
-     * @param account Find transactions with postings involving given account, either as source or destination.
-     * @param source Find transactions with postings involving given account at source.
-     * @param destination Find transactions with postings involving given account at destination.
+     * @param account Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
+     * @param source Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
+     * @param destination Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
      * @param startTime Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute). 
      * @param endTime Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute). 
-     * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
      * @param metadata Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below.
      */
     public listTransactions(ledger: string, pageSize?: number, after?: string, reference?: string, account?: string, source?: string, destination?: string, startTime?: string, endTime?: string, paginationToken?: string, metadata?: any, _options?: Configuration): Observable<ListTransactions200Response> {

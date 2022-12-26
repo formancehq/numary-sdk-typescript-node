@@ -12,28 +12,49 @@
 
 import { HttpFile } from '../http/http';
 
-export class ListAccounts400Response {
-    'errorCode': string;
-    'errorMessage'?: string;
+export class Log {
+    'id': number;
+    'type': string;
+    'data': any;
+    'hash': string;
+    'date': Date;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "errorCode",
-            "baseName": "error_code",
+            "name": "id",
+            "baseName": "id",
+            "type": "number",
+            "format": "int64"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
             "type": "string",
             "format": ""
         },
         {
-            "name": "errorMessage",
-            "baseName": "error_message",
+            "name": "data",
+            "baseName": "data",
+            "type": "any",
+            "format": ""
+        },
+        {
+            "name": "hash",
+            "baseName": "hash",
             "type": "string",
             "format": ""
+        },
+        {
+            "name": "date",
+            "baseName": "date",
+            "type": "Date",
+            "format": "date-time"
         }    ];
 
     static getAttributeTypeMap() {
-        return ListAccounts400Response.attributeTypeMap;
+        return Log.attributeTypeMap;
     }
 
     public constructor() {

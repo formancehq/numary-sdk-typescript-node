@@ -2,6 +2,7 @@
 .gitignore
 AccountsApi.md
 BalancesApi.md
+LogsApi.md
 MappingApi.md
 README.md
 ScriptApi.md
@@ -11,6 +12,7 @@ Taskfile.yml
 TransactionsApi.md
 apis/AccountsApi.ts
 apis/BalancesApi.ts
+apis/LogsApi.ts
 apis/MappingApi.ts
 apis/ScriptApi.ts
 apis/ServerApi.ts
@@ -50,12 +52,18 @@ models/ListAccounts200Response.ts
 models/ListAccounts200ResponseCursor.ts
 models/ListAccounts200ResponseCursorAllOf.ts
 models/ListAccounts400Response.ts
+models/ListLogs200Response.ts
+models/ListLogs200ResponseCursor.ts
+models/ListLogs200ResponseCursorAllOf.ts
 models/ListTransactions200Response.ts
 models/ListTransactions200ResponseCursor.ts
 models/ListTransactions200ResponseCursorAllOf.ts
+models/Log.ts
 models/Mapping.ts
 models/MappingResponse.ts
 models/ObjectSerializer.ts
+models/PostTransaction.ts
+models/PostTransactionScript.ts
 models/Posting.ts
 models/Script.ts
 models/ScriptResult.ts
