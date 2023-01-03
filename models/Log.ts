@@ -10,41 +10,57 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class Log {
+    'id': number;
+    'type': LogTypeEnum;
+    'data': any;
+    'hash': string;
+    'date': Date;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
+            "name": "id",
+            "baseName": "id",
+            "type": "number",
+            "format": "int64"
+        },
+        {
+            "name": "type",
+            "baseName": "type",
+            "type": "LogTypeEnum",
             "format": ""
         },
         {
-            "name": "server",
-            "baseName": "server",
+            "name": "data",
+            "baseName": "data",
+            "type": "any",
+            "format": ""
+        },
+        {
+            "name": "hash",
+            "baseName": "hash",
             "type": "string",
             "format": ""
         },
         {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
-            "format": ""
+            "name": "date",
+            "baseName": "date",
+            "type": "Date",
+            "format": "date-time"
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return Log.attributeTypeMap;
     }
 
     public constructor() {
     }
 }
+
+
+export type LogTypeEnum = "NEW_TRANSACTION" | "SET_METADATA" ;
 

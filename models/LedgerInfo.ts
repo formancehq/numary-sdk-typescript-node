@@ -10,26 +10,20 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
+import { LedgerInfoStorage } from '../models/LedgerInfoStorage';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class LedgerInfo {
+    'name'?: string;
+    'version'?: string;
+    'storage'?: LedgerInfoStorage;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
+            "name": "name",
+            "baseName": "name",
             "type": "string",
             "format": ""
         },
@@ -38,10 +32,16 @@ export class ConfigInfo {
             "baseName": "version",
             "type": "string",
             "format": ""
+        },
+        {
+            "name": "storage",
+            "baseName": "storage",
+            "type": "LedgerInfoStorage",
+            "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return LedgerInfo.attributeTypeMap;
     }
 
     public constructor() {

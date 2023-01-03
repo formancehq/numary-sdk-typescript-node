@@ -10,38 +10,30 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class PostTransactionScript {
+    'plain': string;
+    'vars'?: any;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
+            "name": "plain",
+            "baseName": "plain",
             "type": "string",
             "format": ""
         },
         {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
+            "name": "vars",
+            "baseName": "vars",
+            "type": "any",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return PostTransactionScript.attributeTypeMap;
     }
 
     public constructor() {

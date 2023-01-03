@@ -10,38 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
+import { LedgerInfo } from '../models/LedgerInfo';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class LedgerInfoResponse {
+    'data'?: LedgerInfo;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
+            "name": "data",
+            "baseName": "data",
+            "type": "LedgerInfo",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return LedgerInfoResponse.attributeTypeMap;
     }
 
     public constructor() {

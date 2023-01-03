@@ -10,38 +10,31 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
+import { MigrationInfo } from '../models/MigrationInfo';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class LedgerInfoStorage {
+    'driver'?: string;
+    'migrations'?: Array<MigrationInfo>;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
+            "name": "driver",
+            "baseName": "driver",
             "type": "string",
             "format": ""
         },
         {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
+            "name": "migrations",
+            "baseName": "migrations",
+            "type": "Array<MigrationInfo>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return LedgerInfoStorage.attributeTypeMap;
     }
 
     public constructor() {

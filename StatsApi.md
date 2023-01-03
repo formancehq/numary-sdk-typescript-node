@@ -1,28 +1,33 @@
-# StatsApi
+# ledger.StatsApi
 
-All URIs are relative to *https://.o.numary.cloud/ledger*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**readStats**](StatsApi.md#readStats) | **GET** /{ledger}/stats | Get Stats
+[**readStats**](StatsApi.md#readStats) | **GET** /{ledger}/stats | Get statistics from a ledger.
 
 
 # **readStats**
 > StatsResponse readStats()
 
-Get ledger stats (aggregate metrics on accounts and transactions) The stats for account 
+Get statistics from a ledger. (aggregate metrics on accounts and transactions) 
 
 ### Example
 
 
 ```typescript
-import { StatsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new StatsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.StatsApi(configuration);
 
-apiInstance.readStats("ledger001" ).then((data:any) => {
+let body:ledger.StatsApiReadStatsRequest = {
+  // string | name of the ledger
+  ledger: "ledger001",
+};
+
+apiInstance.readStats(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -41,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 

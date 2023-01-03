@@ -1,6 +1,6 @@
-# TransactionsApi
+# ledger.TransactionsApi
 
-All URIs are relative to *https://.o.numary.cloud/ledger*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -21,15 +21,24 @@ Method | HTTP request | Description
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.addMetadataOnTransaction("ledger001",  1234,  {
+let body:ledger.TransactionsApiAddMetadataOnTransactionRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // number | Transaction ID.
+  txid: 1234,
+  // { [key: string]: any; } | metadata (optional)
+  requestBody: {
     "key": null,
-  } ).then((data:any) => {
+  },
+};
+
+apiInstance.addMetadataOnTransaction(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -50,7 +59,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -75,13 +84,32 @@ Name | Type | Description  | Notes
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.countTransactions("ledger001",  "ref:001",  "users:001",  "users:001",  "users:001",  {} ).then((data:any) => {
+let body:ledger.TransactionsApiCountTransactionsRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Filter transactions by reference field. (optional)
+  reference: "ref:001",
+  // string | Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $). (optional)
+  account: "users:001",
+  // string | Filter transactions with postings involving given account at source (regular expression placed between ^ and $). (optional)
+  source: "users:001",
+  // string | Filter transactions with postings involving given account at destination (regular expression placed between ^ and $). (optional)
+  destination: "users:001",
+  // string | Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute).  (optional)
+  startTime: "start_time_example",
+  // string | Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute).  (optional)
+  endTime: "end_time_example",
+  // any | Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  metadata: {},
+};
+
+apiInstance.countTransactions(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -93,9 +121,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **reference** | [**string**] | Filter transactions by reference field. | (optional) defaults to undefined
- **account** | [**string**] | Filter transactions with postings involving given account, either as source or destination. | (optional) defaults to undefined
- **source** | [**string**] | Filter transactions with postings involving given account at source. | (optional) defaults to undefined
- **destination** | [**string**] | Filter transactions with postings involving given account at destination. | (optional) defaults to undefined
+ **account** | [**string**] | Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $). | (optional) defaults to undefined
+ **source** | [**string**] | Filter transactions with postings involving given account at source (regular expression placed between ^ and $). | (optional) defaults to undefined
+ **destination** | [**string**] | Filter transactions with postings involving given account at destination (regular expression placed between ^ and $). | (optional) defaults to undefined
+ **startTime** | [**string**] | Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute).  | (optional) defaults to undefined
+ **endTime** | [**string**] | Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute).  | (optional) defaults to undefined
  **metadata** | **any** | Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
 
 
@@ -105,7 +135,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -121,20 +151,24 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **createTransaction**
-> TransactionsResponse createTransaction(transactionData)
+> TransactionsResponse createTransaction(postTransaction)
 
 
 ### Example
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.createTransaction("ledger001",  {
+let body:ledger.TransactionsApiCreateTransactionRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // PostTransaction | The request body must contain at least one of the following objects:   - `postings`: suitable for simple transactions   - `script`: enabling more complex transactions with Numscript 
+  postTransaction: {
     timestamp: new Date('1970-01-01T00:00:00.00Z'),
     postings: [
       {
@@ -144,11 +178,27 @@ apiInstance.createTransaction("ledger001",  {
         source: "users:001",
       },
     ],
+    script: {
+      plain: `vars {
+account $user
+}
+send [COIN 10] (
+	source = @world
+	destination = $user
+)
+`,
+      vars: {},
+    },
     reference: "ref:001",
     metadata: {
       "key": null,
     },
-  },  true ).then((data:any) => {
+  },
+  // boolean | Set the preview mode. Preview mode doesn't add the logs to the database or publish a message to the message broker. (optional)
+  preview: true,
+};
+
+apiInstance.createTransaction(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -158,7 +208,7 @@ apiInstance.createTransaction("ledger001",  {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **transactionData** | **TransactionData**|  |
+ **postTransaction** | **PostTransaction**| The request body must contain at least one of the following objects:   - &#x60;postings&#x60;: suitable for simple transactions   - &#x60;script&#x60;: enabling more complex transactions with Numscript  |
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **preview** | [**boolean**] | Set the preview mode. Preview mode doesn&#39;t add the logs to the database or publish a message to the message broker. | (optional) defaults to undefined
 
@@ -169,7 +219,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -181,7 +231,6 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
-**304** | Not modified (when preview is enabled) |  -  |
 **400** | Bad Request |  -  |
 **409** | Conflict |  -  |
 
@@ -195,13 +244,17 @@ Name | Type | Description  | Notes
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.createTransactions("ledger001",  {
+let body:ledger.TransactionsApiCreateTransactionsRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // Transactions
+  transactions: {
     transactions: [
       {
         timestamp: new Date('1970-01-01T00:00:00.00Z'),
@@ -219,7 +272,10 @@ apiInstance.createTransactions("ledger001",  {
         },
       },
     ],
-  } ).then((data:any) => {
+  },
+};
+
+apiInstance.createTransactions(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -239,7 +295,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -264,13 +320,20 @@ Name | Type | Description  | Notes
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.getTransaction("ledger001",  1234 ).then((data:any) => {
+let body:ledger.TransactionsApiGetTransactionRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // number | Transaction ID.
+  txid: 1234,
+};
+
+apiInstance.getTransaction(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -290,7 +353,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -316,13 +379,38 @@ List transactions from a ledger, sorted by txid in descending order.
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.listTransactions("ledger001",  100,  "1234",  "ref:001",  "users:001",  "users:001",  "users:001",  "start_time_example",  "end_time_example",  "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==",  {} ).then((data:any) => {
+let body:ledger.TransactionsApiListTransactionsRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // number | The maximum number of results to return per page (optional)
+  pageSize: 15,
+  // string | Pagination cursor, will return transactions after given txid (in descending order). (optional)
+  after: "1234",
+  // string | Find transactions by reference field. (optional)
+  reference: "ref:001",
+  // string | Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $). (optional)
+  account: "users:001",
+  // string | Filter transactions with postings involving given account at source (regular expression placed between ^ and $). (optional)
+  source: "users:001",
+  // string | Filter transactions with postings involving given account at destination (regular expression placed between ^ and $). (optional)
+  destination: "users:001",
+  // string | Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute).  (optional)
+  startTime: "start_time_example",
+  // string | Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute).  (optional)
+  endTime: "end_time_example",
+  // string | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  (optional)
+  paginationToken: "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==",
+  // any | Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  metadata: {},
+};
+
+apiInstance.listTransactions(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -336,12 +424,12 @@ Name | Type | Description  | Notes
  **pageSize** | [**number**] | The maximum number of results to return per page | (optional) defaults to 15
  **after** | [**string**] | Pagination cursor, will return transactions after given txid (in descending order). | (optional) defaults to undefined
  **reference** | [**string**] | Find transactions by reference field. | (optional) defaults to undefined
- **account** | [**string**] | Find transactions with postings involving given account, either as source or destination. | (optional) defaults to undefined
- **source** | [**string**] | Find transactions with postings involving given account at source. | (optional) defaults to undefined
- **destination** | [**string**] | Find transactions with postings involving given account at destination. | (optional) defaults to undefined
+ **account** | [**string**] | Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $). | (optional) defaults to undefined
+ **source** | [**string**] | Filter transactions with postings involving given account at source (regular expression placed between ^ and $). | (optional) defaults to undefined
+ **destination** | [**string**] | Filter transactions with postings involving given account at destination (regular expression placed between ^ and $). | (optional) defaults to undefined
  **startTime** | [**string**] | Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute).  | (optional) defaults to undefined
  **endTime** | [**string**] | Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute).  | (optional) defaults to undefined
- **paginationToken** | [**string**] | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  | (optional) defaults to undefined
+ **paginationToken** | [**string**] | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  | (optional) defaults to undefined
  **metadata** | **any** | Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
 
 
@@ -351,7 +439,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -375,13 +463,20 @@ Name | Type | Description  | Notes
 
 
 ```typescript
-import { TransactionsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new TransactionsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.TransactionsApi(configuration);
 
-apiInstance.revertTransaction("ledger001",  1234 ).then((data:any) => {
+let body:ledger.TransactionsApiRevertTransactionRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // number | Transaction ID.
+  txid: 1234,
+};
+
+apiInstance.revertTransaction(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -401,7 +496,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 

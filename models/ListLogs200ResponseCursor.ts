@@ -10,38 +10,52 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
+import { Log } from '../models/Log';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class ListLogs200ResponseCursor {
+    'pageSize': number;
+    'hasMore'?: boolean;
+    'previous'?: string;
+    'next'?: string;
+    'data': Array<Log>;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
+            "name": "pageSize",
+            "baseName": "page_size",
+            "type": "number",
+            "format": "int64"
+        },
+        {
+            "name": "hasMore",
+            "baseName": "has_more",
+            "type": "boolean",
             "format": ""
         },
         {
-            "name": "server",
-            "baseName": "server",
+            "name": "previous",
+            "baseName": "previous",
             "type": "string",
             "format": ""
         },
         {
-            "name": "version",
-            "baseName": "version",
+            "name": "next",
+            "baseName": "next",
             "type": "string",
+            "format": ""
+        },
+        {
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<Log>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return ListLogs200ResponseCursor.attributeTypeMap;
     }
 
     public constructor() {

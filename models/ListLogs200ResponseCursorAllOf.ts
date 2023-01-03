@@ -10,38 +10,24 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
+import { Log } from '../models/Log';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class ListLogs200ResponseCursorAllOf {
+    'data': Array<Log>;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
-            "type": "string",
-            "format": ""
-        },
-        {
-            "name": "version",
-            "baseName": "version",
-            "type": "string",
+            "name": "data",
+            "baseName": "data",
+            "type": "Array<Log>",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return ListLogs200ResponseCursorAllOf.attributeTypeMap;
     }
 
     public constructor() {

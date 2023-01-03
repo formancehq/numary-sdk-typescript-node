@@ -1,5 +1,5 @@
 // TODO: better import syntax?
-import {BaseAPIRequestFactory, RequiredError} from './baseapi';
+import {BaseAPIRequestFactory, RequiredError, COLLECTION_FORMATS} from './baseapi';
 import {Configuration} from '../configuration';
 import {RequestContext, HttpMethod, ResponseContext, HttpFile} from '../http/http';
 import * as FormData from "form-data";
@@ -18,8 +18,8 @@ import { StatsResponse } from '../models/StatsResponse';
 export class StatsApiRequestFactory extends BaseAPIRequestFactory {
 
     /**
-     * Get ledger stats (aggregate metrics on accounts and transactions) The stats for account 
-     * Get Stats
+     * Get statistics from a ledger. (aggregate metrics on accounts and transactions) 
+     * Get statistics from a ledger.
      * @param ledger name of the ledger
      */
     public async readStats(ledger: string, _options?: Configuration): Promise<RequestContext> {
@@ -40,12 +40,6 @@ export class StatsApiRequestFactory extends BaseAPIRequestFactory {
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
 
 
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["basicAuth"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
         
         const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
         if (defaultAuth?.applySecurityAuthentication) {

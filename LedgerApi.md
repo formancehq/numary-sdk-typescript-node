@@ -1,14 +1,14 @@
-# ledger.ServerApi
+# ledger.LedgerApi
 
 All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getInfo**](ServerApi.md#getInfo) | **GET** /_info | Show server information.
+[**getLedgerInfo**](LedgerApi.md#getLedgerInfo) | **GET** /{ledger}/_info | Get information about a ledger.
 
 
-# **getInfo**
-> ConfigInfoResponse getInfo()
+# **getLedgerInfo**
+> LedgerInfoResponse getLedgerInfo()
 
 
 ### Example
@@ -19,23 +19,29 @@ import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
 const configuration = ledger.createConfiguration();
-const apiInstance = new ledger.ServerApi(configuration);
+const apiInstance = new ledger.LedgerApi(configuration);
 
-let body:any = {};
+let body:ledger.LedgerApiGetLedgerInfoRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+};
 
-apiInstance.getInfo(body).then((data:any) => {
+apiInstance.getLedgerInfo(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
 
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ledger** | [**string**] | Name of the ledger. | defaults to undefined
 
 
 ### Return type
 
-**ConfigInfoResponse**
+**LedgerInfoResponse**
 
 ### Authorization
 

@@ -10,41 +10,43 @@
  * Do not edit the class manually.
  */
 
-import { Config } from '../models/Config';
 import { HttpFile } from '../http/http';
 
-export class ConfigInfo {
-    'config': Config;
-    'server': string;
-    'version': string;
+export class MigrationInfo {
+    'version'?: number;
+    'date'?: Date;
+    'state'?: MigrationInfoStateEnum;
 
     static readonly discriminator: string | undefined = undefined;
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "config",
-            "baseName": "config",
-            "type": "Config",
-            "format": ""
-        },
-        {
-            "name": "server",
-            "baseName": "server",
-            "type": "string",
-            "format": ""
-        },
-        {
             "name": "version",
             "baseName": "version",
-            "type": "string",
+            "type": "number",
+            "format": "int64"
+        },
+        {
+            "name": "date",
+            "baseName": "date",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "state",
+            "baseName": "state",
+            "type": "MigrationInfoStateEnum",
             "format": ""
         }    ];
 
     static getAttributeTypeMap() {
-        return ConfigInfo.attributeTypeMap;
+        return MigrationInfo.attributeTypeMap;
     }
 
     public constructor() {
     }
 }
+
+
+export type MigrationInfoStateEnum = "to do" | "done" ;
 

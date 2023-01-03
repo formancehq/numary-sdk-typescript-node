@@ -10,14 +10,14 @@
  * Do not edit the class manually.
  */
 
+import { PostTransactionScript } from '../models/PostTransactionScript';
+import { Posting } from '../models/Posting';
 import { HttpFile } from '../http/http';
 
-export class Script {
-    'plain': string;
-    'vars'?: any;
-    /**
-    * Reference to attach to the generated transaction
-    */
+export class PostTransaction {
+    'timestamp'?: Date;
+    'postings'?: Array<Posting>;
+    'script'?: PostTransactionScript;
     'reference'?: string;
     'metadata'?: { [key: string]: any; };
 
@@ -25,15 +25,21 @@ export class Script {
 
     static readonly attributeTypeMap: Array<{name: string, baseName: string, type: string, format: string}> = [
         {
-            "name": "plain",
-            "baseName": "plain",
-            "type": "string",
+            "name": "timestamp",
+            "baseName": "timestamp",
+            "type": "Date",
+            "format": "date-time"
+        },
+        {
+            "name": "postings",
+            "baseName": "postings",
+            "type": "Array<Posting>",
             "format": ""
         },
         {
-            "name": "vars",
-            "baseName": "vars",
-            "type": "any",
+            "name": "script",
+            "baseName": "script",
+            "type": "PostTransactionScript",
             "format": ""
         },
         {
@@ -50,7 +56,7 @@ export class Script {
         }    ];
 
     static getAttributeTypeMap() {
-        return Script.attributeTypeMap;
+        return PostTransaction.attributeTypeMap;
     }
 
     public constructor() {
