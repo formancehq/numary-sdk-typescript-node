@@ -1,6 +1,6 @@
-# BalancesApi
+# ledger.BalancesApi
 
-All URIs are relative to *https://.o.numary.cloud/ledger*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -9,20 +9,31 @@ Method | HTTP request | Description
 
 
 # **getBalances**
-> GetBalances200Response getBalances()
+> BalancesCursorResponse getBalances()
 
 
 ### Example
 
 
 ```typescript
-import { BalancesApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new BalancesApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.BalancesApi(configuration);
 
-apiInstance.getBalances("ledger001",  "users:001",  "users:003",  "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==" ).then((data:any) => {
+let body:ledger.BalancesApiGetBalancesRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Filter balances involving given account, either as source or destination. (optional)
+  address: "users:001",
+  // string | Pagination cursor, will return accounts after given address, in descending order. (optional)
+  after: "users:003",
+  // string | Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. (optional)
+  paginationToken: "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==",
+};
+
+apiInstance.getBalances(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -35,16 +46,16 @@ Name | Type | Description  | Notes
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **address** | [**string**] | Filter balances involving given account, either as source or destination. | (optional) defaults to undefined
  **after** | [**string**] | Pagination cursor, will return accounts after given address, in descending order. | (optional) defaults to undefined
- **paginationToken** | [**string**] | Parameter used in pagination requests.  Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. | (optional) defaults to undefined
+ **paginationToken** | [**string**] | Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. | (optional) defaults to undefined
 
 
 ### Return type
 
-**GetBalances200Response**
+**BalancesCursorResponse**
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -56,25 +67,32 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
-**400** | Bad Request |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **getBalancesAggregated**
-> GetBalancesAggregated200Response getBalancesAggregated()
+> AggregateBalancesResponse getBalancesAggregated()
 
 
 ### Example
 
 
 ```typescript
-import { BalancesApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new BalancesApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.BalancesApi(configuration);
 
-apiInstance.getBalancesAggregated("ledger001",  "users:001" ).then((data:any) => {
+let body:ledger.BalancesApiGetBalancesAggregatedRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Filter balances involving given account, either as source or destination. (optional)
+  address: "users:001",
+};
+
+apiInstance.getBalancesAggregated(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -90,11 +108,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**GetBalancesAggregated200Response**
+**AggregateBalancesResponse**
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -106,7 +124,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
-**400** | Bad Request |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 

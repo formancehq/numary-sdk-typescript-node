@@ -1,47 +1,43 @@
 import { ResponseContext, RequestContext, HttpFile } from '../http/http';
-import * as models from '../models/all';
 import { Configuration} from '../configuration'
 
 import { Account } from '../models/Account';
+import { AccountResponse } from '../models/AccountResponse';
 import { AccountWithVolumesAndBalances } from '../models/AccountWithVolumesAndBalances';
+import { AccountsCursorResponse } from '../models/AccountsCursorResponse';
+import { AccountsCursorResponseCursor } from '../models/AccountsCursorResponseCursor';
+import { AggregateBalancesResponse } from '../models/AggregateBalancesResponse';
+import { BalancesCursorResponse } from '../models/BalancesCursorResponse';
+import { BalancesCursorResponseCursor } from '../models/BalancesCursorResponseCursor';
 import { Config } from '../models/Config';
 import { ConfigInfo } from '../models/ConfigInfo';
 import { ConfigInfoResponse } from '../models/ConfigInfoResponse';
 import { Contract } from '../models/Contract';
-import { CreateTransaction400Response } from '../models/CreateTransaction400Response';
-import { CreateTransaction409Response } from '../models/CreateTransaction409Response';
-import { CreateTransactions400Response } from '../models/CreateTransactions400Response';
-import { Cursor } from '../models/Cursor';
-import { ErrorCode } from '../models/ErrorCode';
 import { ErrorResponse } from '../models/ErrorResponse';
-import { GetAccount200Response } from '../models/GetAccount200Response';
-import { GetAccount400Response } from '../models/GetAccount400Response';
-import { GetBalances200Response } from '../models/GetBalances200Response';
-import { GetBalances200ResponseCursor } from '../models/GetBalances200ResponseCursor';
-import { GetBalances200ResponseCursorAllOf } from '../models/GetBalances200ResponseCursorAllOf';
-import { GetBalancesAggregated200Response } from '../models/GetBalancesAggregated200Response';
-import { GetBalancesAggregated400Response } from '../models/GetBalancesAggregated400Response';
-import { GetTransaction400Response } from '../models/GetTransaction400Response';
-import { GetTransaction404Response } from '../models/GetTransaction404Response';
+import { ErrorsEnum } from '../models/ErrorsEnum';
+import { LedgerInfo } from '../models/LedgerInfo';
+import { LedgerInfoResponse } from '../models/LedgerInfoResponse';
+import { LedgerInfoStorage } from '../models/LedgerInfoStorage';
 import { LedgerStorage } from '../models/LedgerStorage';
-import { ListAccounts200Response } from '../models/ListAccounts200Response';
-import { ListAccounts200ResponseCursor } from '../models/ListAccounts200ResponseCursor';
-import { ListAccounts200ResponseCursorAllOf } from '../models/ListAccounts200ResponseCursorAllOf';
-import { ListAccounts400Response } from '../models/ListAccounts400Response';
-import { ListTransactions200Response } from '../models/ListTransactions200Response';
-import { ListTransactions200ResponseCursor } from '../models/ListTransactions200ResponseCursor';
-import { ListTransactions200ResponseCursorAllOf } from '../models/ListTransactions200ResponseCursorAllOf';
+import { Log } from '../models/Log';
+import { LogsCursorResponse } from '../models/LogsCursorResponse';
+import { LogsCursorResponseCursor } from '../models/LogsCursorResponseCursor';
 import { Mapping } from '../models/Mapping';
 import { MappingResponse } from '../models/MappingResponse';
+import { MigrationInfo } from '../models/MigrationInfo';
+import { PostTransaction } from '../models/PostTransaction';
+import { PostTransactionScript } from '../models/PostTransactionScript';
 import { Posting } from '../models/Posting';
 import { Script } from '../models/Script';
-import { ScriptResult } from '../models/ScriptResult';
+import { ScriptResponse } from '../models/ScriptResponse';
 import { Stats } from '../models/Stats';
 import { StatsResponse } from '../models/StatsResponse';
 import { Transaction } from '../models/Transaction';
 import { TransactionData } from '../models/TransactionData';
 import { TransactionResponse } from '../models/TransactionResponse';
 import { Transactions } from '../models/Transactions';
+import { TransactionsCursorResponse } from '../models/TransactionsCursorResponse';
+import { TransactionsCursorResponseCursor } from '../models/TransactionsCursorResponseCursor';
 import { TransactionsResponse } from '../models/TransactionsResponse';
 import { Volume } from '../models/Volume';
 
@@ -144,12 +140,12 @@ export interface AccountsApiListAccountsRequest {
     balance?: number
     /**
      * Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, or equal
-     * @type &#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39;
+     * @type &#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;
      * @memberof AccountsApilistAccounts
      */
-    balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e'
+    balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne'
     /**
-     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
      * @type string
      * @memberof AccountsApilistAccounts
      */
@@ -183,7 +179,7 @@ export class ObjectAccountsApi {
      * Get account by its address.
      * @param param the request object
      */
-    public getAccount(param: AccountsApiGetAccountRequest, options?: Configuration): Promise<GetAccount200Response> {
+    public getAccount(param: AccountsApiGetAccountRequest, options?: Configuration): Promise<AccountResponse> {
         return this.api.getAccount(param.ledger, param.address,  options).toPromise();
     }
 
@@ -192,7 +188,7 @@ export class ObjectAccountsApi {
      * List accounts from a ledger.
      * @param param the request object
      */
-    public listAccounts(param: AccountsApiListAccountsRequest, options?: Configuration): Promise<ListAccounts200Response> {
+    public listAccounts(param: AccountsApiListAccountsRequest, options?: Configuration): Promise<AccountsCursorResponse> {
         return this.api.listAccounts(param.ledger, param.pageSize, param.after, param.address, param.metadata, param.balance, param.balanceOperator, param.paginationToken,  options).toPromise();
     }
 
@@ -221,7 +217,7 @@ export interface BalancesApiGetBalancesRequest {
      */
     after?: string
     /**
-     * Parameter used in pagination requests.  Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results.
+     * Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results.
      * @type string
      * @memberof BalancesApigetBalances
      */
@@ -254,7 +250,7 @@ export class ObjectBalancesApi {
      * Get the balances from a ledger's account
      * @param param the request object
      */
-    public getBalances(param: BalancesApiGetBalancesRequest, options?: Configuration): Promise<GetBalances200Response> {
+    public getBalances(param: BalancesApiGetBalancesRequest, options?: Configuration): Promise<BalancesCursorResponse> {
         return this.api.getBalances(param.ledger, param.address, param.after, param.paginationToken,  options).toPromise();
     }
 
@@ -262,8 +258,97 @@ export class ObjectBalancesApi {
      * Get the aggregated balances from selected accounts
      * @param param the request object
      */
-    public getBalancesAggregated(param: BalancesApiGetBalancesAggregatedRequest, options?: Configuration): Promise<GetBalancesAggregated200Response> {
+    public getBalancesAggregated(param: BalancesApiGetBalancesAggregatedRequest, options?: Configuration): Promise<AggregateBalancesResponse> {
         return this.api.getBalancesAggregated(param.ledger, param.address,  options).toPromise();
+    }
+
+}
+
+import { ObservableLedgerApi } from "./ObservableAPI";
+import { LedgerApiRequestFactory, LedgerApiResponseProcessor} from "../apis/LedgerApi";
+
+export interface LedgerApiGetLedgerInfoRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetLedgerInfo
+     */
+    ledger: string
+}
+
+export class ObjectLedgerApi {
+    private api: ObservableLedgerApi
+
+    public constructor(configuration: Configuration, requestFactory?: LedgerApiRequestFactory, responseProcessor?: LedgerApiResponseProcessor) {
+        this.api = new ObservableLedgerApi(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * Get information about a ledger.
+     * @param param the request object
+     */
+    public getLedgerInfo(param: LedgerApiGetLedgerInfoRequest, options?: Configuration): Promise<LedgerInfoResponse> {
+        return this.api.getLedgerInfo(param.ledger,  options).toPromise();
+    }
+
+}
+
+import { ObservableLogsApi } from "./ObservableAPI";
+import { LogsApiRequestFactory, LogsApiResponseProcessor} from "../apis/LogsApi";
+
+export interface LogsApiListLogsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LogsApilistLogs
+     */
+    ledger: string
+    /**
+     * The maximum number of results to return per page
+     * @type number
+     * @memberof LogsApilistLogs
+     */
+    pageSize?: number
+    /**
+     * Pagination cursor, will return the logs after a given ID. (in descending order).
+     * @type string
+     * @memberof LogsApilistLogs
+     */
+    after?: string
+    /**
+     * Filter logs that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute). 
+     * @type string
+     * @memberof LogsApilistLogs
+     */
+    startTime?: string
+    /**
+     * Filter logs that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute). 
+     * @type string
+     * @memberof LogsApilistLogs
+     */
+    endTime?: string
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     * @type string
+     * @memberof LogsApilistLogs
+     */
+    paginationToken?: string
+}
+
+export class ObjectLogsApi {
+    private api: ObservableLogsApi
+
+    public constructor(configuration: Configuration, requestFactory?: LogsApiRequestFactory, responseProcessor?: LogsApiResponseProcessor) {
+        this.api = new ObservableLogsApi(configuration, requestFactory, responseProcessor);
+    }
+
+    /**
+     * List the logs from a ledger, sorted by ID in descending order.
+     * List the logs from a ledger.
+     * @param param the request object
+     */
+    public listLogs(param: LogsApiListLogsRequest, options?: Configuration): Promise<LogsCursorResponse> {
+        return this.api.listLogs(param.ledger, param.pageSize, param.after, param.startTime, param.endTime, param.paginationToken,  options).toPromise();
     }
 
 }
@@ -352,10 +437,11 @@ export class ObjectScriptApi {
     }
 
     /**
+     * This route is deprecated, and has been merged into `POST /{ledger}/transactions`. 
      * Execute a Numscript.
      * @param param the request object
      */
-    public runScript(param: ScriptApiRunScriptRequest, options?: Configuration): Promise<ScriptResult> {
+    public runScript(param: ScriptApiRunScriptRequest, options?: Configuration): Promise<ScriptResponse> {
         return this.api.runScript(param.ledger, param.script, param.preview,  options).toPromise();
     }
 
@@ -404,8 +490,8 @@ export class ObjectStatsApi {
     }
 
     /**
-     * Get ledger stats (aggregate metrics on accounts and transactions) The stats for account 
-     * Get Stats
+     * Get statistics from a ledger. (aggregate metrics on accounts and transactions) 
+     * Get statistics from a ledger.
      * @param param the request object
      */
     public readStats(param: StatsApiReadStatsRequest, options?: Configuration): Promise<StatsResponse> {
@@ -452,23 +538,35 @@ export interface TransactionsApiCountTransactionsRequest {
      */
     reference?: string
     /**
-     * Filter transactions with postings involving given account, either as source or destination.
+     * Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApicountTransactions
      */
     account?: string
     /**
-     * Filter transactions with postings involving given account at source.
+     * Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApicountTransactions
      */
     source?: string
     /**
-     * Filter transactions with postings involving given account at destination.
+     * Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApicountTransactions
      */
     destination?: string
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, 12:00:01 includes the first second of the minute). 
+     * @type string
+     * @memberof TransactionsApicountTransactions
+     */
+    startTime?: string
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, 12:00:01 excludes the first second of the minute). 
+     * @type string
+     * @memberof TransactionsApicountTransactions
+     */
+    endTime?: string
     /**
      * Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below.
      * @type any
@@ -485,11 +583,11 @@ export interface TransactionsApiCreateTransactionRequest {
      */
     ledger: string
     /**
-     * 
-     * @type TransactionData
+     * The request body must contain at least one of the following objects:   - &#x60;postings&#x60;: suitable for simple transactions   - &#x60;script&#x60;: enabling more complex transactions with Numscript 
+     * @type PostTransaction
      * @memberof TransactionsApicreateTransaction
      */
-    transactionData: TransactionData
+    postTransaction: PostTransaction
     /**
      * Set the preview mode. Preview mode doesn&#39;t add the logs to the database or publish a message to the message broker.
      * @type boolean
@@ -554,19 +652,19 @@ export interface TransactionsApiListTransactionsRequest {
      */
     reference?: string
     /**
-     * Find transactions with postings involving given account, either as source or destination.
+     * Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApilistTransactions
      */
     account?: string
     /**
-     * Find transactions with postings involving given account at source.
+     * Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApilistTransactions
      */
     source?: string
     /**
-     * Find transactions with postings involving given account at destination.
+     * Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
      * @type string
      * @memberof TransactionsApilistTransactions
      */
@@ -584,7 +682,7 @@ export interface TransactionsApiListTransactionsRequest {
      */
     endTime?: string
     /**
-     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set. 
      * @type string
      * @memberof TransactionsApilistTransactions
      */
@@ -632,7 +730,7 @@ export class ObjectTransactionsApi {
      * @param param the request object
      */
     public countTransactions(param: TransactionsApiCountTransactionsRequest, options?: Configuration): Promise<void> {
-        return this.api.countTransactions(param.ledger, param.reference, param.account, param.source, param.destination, param.metadata,  options).toPromise();
+        return this.api.countTransactions(param.ledger, param.reference, param.account, param.source, param.destination, param.startTime, param.endTime, param.metadata,  options).toPromise();
     }
 
     /**
@@ -640,7 +738,7 @@ export class ObjectTransactionsApi {
      * @param param the request object
      */
     public createTransaction(param: TransactionsApiCreateTransactionRequest, options?: Configuration): Promise<TransactionsResponse> {
-        return this.api.createTransaction(param.ledger, param.transactionData, param.preview,  options).toPromise();
+        return this.api.createTransaction(param.ledger, param.postTransaction, param.preview,  options).toPromise();
     }
 
     /**
@@ -664,7 +762,7 @@ export class ObjectTransactionsApi {
      * List transactions from a ledger.
      * @param param the request object
      */
-    public listTransactions(param: TransactionsApiListTransactionsRequest, options?: Configuration): Promise<ListTransactions200Response> {
+    public listTransactions(param: TransactionsApiListTransactionsRequest, options?: Configuration): Promise<TransactionsCursorResponse> {
         return this.api.listTransactions(param.ledger, param.pageSize, param.after, param.reference, param.account, param.source, param.destination, param.startTime, param.endTime, param.paginationToken, param.metadata,  options).toPromise();
     }
 

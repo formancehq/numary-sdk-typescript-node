@@ -1,6 +1,6 @@
-# ServerApi
+# ledger.ServerApi
 
-All URIs are relative to *https://.o.numary.cloud/ledger*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -15,13 +15,15 @@ Method | HTTP request | Description
 
 
 ```typescript
-import { ServerApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new ServerApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.ServerApi(configuration);
 
-apiInstance.getInfo().then((data:any) => {
+let body:any = {};
+
+apiInstance.getInfo(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -37,7 +39,7 @@ This endpoint does not need any parameter.
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -49,6 +51,7 @@ This endpoint does not need any parameter.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
