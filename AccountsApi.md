@@ -1,6 +1,6 @@
-# AccountsApi
+# ledger.AccountsApi
 
-All URIs are relative to *https://.o.numary.cloud/ledger*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -18,15 +18,24 @@ Method | HTTP request | Description
 
 
 ```typescript
-import { AccountsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new AccountsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.AccountsApi(configuration);
 
-apiInstance.addMetadataToAccount("ledger001",  "users:001",  {
+let body:ledger.AccountsApiAddMetadataToAccountRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Exact address of the account. It must match the following regular expressions pattern: ``` ^\\w+(:\\w+)*$ ``` 
+  address: "users:001",
+  // { [key: string]: any; } | metadata
+  requestBody: {
     "key": null,
-  } ).then((data:any) => {
+  },
+};
+
+apiInstance.addMetadataToAccount(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -47,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -59,7 +68,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | No Content |  -  |
-**400** | Bad Request |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
@@ -71,13 +80,22 @@ Name | Type | Description  | Notes
 
 
 ```typescript
-import { AccountsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new AccountsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.AccountsApi(configuration);
 
-apiInstance.countAccounts("ledger001",  "users:.+",  {} ).then((data:any) => {
+let body:ledger.AccountsApiCountAccountsRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Filter accounts by address pattern (regular expression placed between ^ and $). (optional)
+  address: "users:.+",
+  // any | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  metadata: {},
+};
+
+apiInstance.countAccounts(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -98,36 +116,44 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  * Count -  <br>  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **getAccount**
-> GetAccount200Response getAccount()
+> AccountResponse getAccount()
 
 
 ### Example
 
 
 ```typescript
-import { AccountsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new AccountsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.AccountsApi(configuration);
 
-apiInstance.getAccount("ledger001",  "users:001" ).then((data:any) => {
+let body:ledger.AccountsApiGetAccountRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // string | Exact address of the account. It must match the following regular expressions pattern: ``` ^\\w+(:\\w+)*$ ``` 
+  address: "users:001",
+};
+
+apiInstance.getAccount(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -143,11 +169,11 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**GetAccount200Response**
+**AccountResponse**
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -159,12 +185,12 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
-**400** | Bad Request |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 
 # **listAccounts**
-> ListAccounts200Response listAccounts()
+> AccountsCursorResponse listAccounts()
 
 List accounts from a ledger, sorted by address in descending order.
 
@@ -172,13 +198,32 @@ List accounts from a ledger, sorted by address in descending order.
 
 
 ```typescript
-import { AccountsApi, createConfiguration } from '@numaryhq/ledger-nodejs';
+import { ledger } from '@numaryhq/ledger-nodejs';
 import * as fs from 'fs';
 
-const configuration = createConfiguration();
-const apiInstance = new AccountsApi(configuration);
+const configuration = ledger.createConfiguration();
+const apiInstance = new ledger.AccountsApi(configuration);
 
-apiInstance.listAccounts("ledger001",  100,  "users:003",  "users:.+",  {},  2400,  "gte",  "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==" ).then((data:any) => {
+let body:ledger.AccountsApiListAccountsRequest = {
+  // string | Name of the ledger.
+  ledger: "ledger001",
+  // number | The maximum number of results to return per page (optional)
+  pageSize: 100,
+  // string | Pagination cursor, will return accounts after given address, in descending order. (optional)
+  after: "users:003",
+  // string | Filter accounts by address pattern (regular expression placed between ^ and $). (optional)
+  address: "users:.+",
+  // any | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  metadata: {},
+  // number | Filter accounts by their balance (default operator is gte) (optional)
+  balance: 2400,
+  // 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne' | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, or equal (optional)
+  balanceOperator: "gte",
+  // string | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  (optional)
+  paginationToken: "aHR0cHM6Ly9nLnBhZ2UvTmVrby1SYW1lbj9zaGFyZQ==",
+};
+
+apiInstance.listAccounts(body).then((data:any) => {
   console.log('API called successfully. Returned data: ' + data);
 }).catch((error:any) => console.error(error));
 ```
@@ -194,17 +239,17 @@ Name | Type | Description  | Notes
  **address** | [**string**] | Filter accounts by address pattern (regular expression placed between ^ and $). | (optional) defaults to undefined
  **metadata** | **any** | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
  **balance** | [**number**] | Filter accounts by their balance (default operator is gte) | (optional) defaults to undefined
- **balanceOperator** | [**&#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39;**]**Array<&#39;gte&#39; &#124; &#39;lte&#39; &#124; &#39;gt&#39; &#124; &#39;lt&#39; &#124; &#39;e&#39; &#124; &#39;11184809&#39;>** | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, or equal | (optional) defaults to undefined
- **paginationToken** | [**string**] | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  | (optional) defaults to undefined
+ **balanceOperator** | [**&#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;**]**Array<&#39;gte&#39; &#124; &#39;lte&#39; &#124; &#39;gt&#39; &#124; &#39;lt&#39; &#124; &#39;e&#39; &#124; &#39;ne&#39; &#124; &#39;11184809&#39;>** | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, or equal | (optional) defaults to undefined
+ **paginationToken** | [**string**] | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when the pagination token is set.  | (optional) defaults to undefined
 
 
 ### Return type
 
-**ListAccounts200Response**
+**AccountsCursorResponse**
 
 ### Authorization
 
-[basicAuth](README.md#basicAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -216,7 +261,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
-**400** | Bad Request |  -  |
+**0** | Error |  -  |
 
 [[Back to top]](#) [[Back to API list]](README.md#documentation-for-api-endpoints) [[Back to Model list]](README.md#documentation-for-models) [[Back to README]](README.md)
 

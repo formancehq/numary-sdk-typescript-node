@@ -1,5 +1,5 @@
 // TODO: better import syntax?
-import {BaseAPIRequestFactory, RequiredError} from './baseapi';
+import {BaseAPIRequestFactory, RequiredError, COLLECTION_FORMATS} from './baseapi';
 import {Configuration} from '../configuration';
 import {RequestContext, HttpMethod, ResponseContext, HttpFile} from '../http/http';
 import * as FormData from "form-data";
@@ -11,7 +11,7 @@ import {SecurityAuthentication} from '../auth/auth';
 
 
 import { Script } from '../models/Script';
-import { ScriptResult } from '../models/ScriptResult';
+import { ScriptResponse } from '../models/ScriptResponse';
 
 /**
  * no description
@@ -19,6 +19,7 @@ import { ScriptResult } from '../models/ScriptResult';
 export class ScriptApiRequestFactory extends BaseAPIRequestFactory {
 
     /**
+     * This route is deprecated, and has been merged into `POST /{ledger}/transactions`. 
      * Execute a Numscript.
      * @param ledger Name of the ledger.
      * @param script 
@@ -65,12 +66,6 @@ export class ScriptApiRequestFactory extends BaseAPIRequestFactory {
         );
         requestContext.setBody(serializedBody);
 
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["basicAuth"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
         
         const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
         if (defaultAuth?.applySecurityAuthentication) {
@@ -91,22 +86,22 @@ export class ScriptApiResponseProcessor {
      * @params response Response returned by the server for a request to runScript
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async runScript(response: ResponseContext): Promise<ScriptResult > {
+     public async runScript(response: ResponseContext): Promise<ScriptResponse > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: ScriptResult = ObjectSerializer.deserialize(
+            const body: ScriptResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ScriptResult", ""
-            ) as ScriptResult;
+                "ScriptResponse", ""
+            ) as ScriptResponse;
             return body;
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: ScriptResult = ObjectSerializer.deserialize(
+            const body: ScriptResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ScriptResult", ""
-            ) as ScriptResult;
+                "ScriptResponse", ""
+            ) as ScriptResponse;
             return body;
         }
 

@@ -1,5 +1,5 @@
 // TODO: better import syntax?
-import {BaseAPIRequestFactory, RequiredError} from './baseapi';
+import {BaseAPIRequestFactory, RequiredError, COLLECTION_FORMATS} from './baseapi';
 import {Configuration} from '../configuration';
 import {RequestContext, HttpMethod, ResponseContext, HttpFile} from '../http/http';
 import * as FormData from "form-data";
@@ -10,10 +10,9 @@ import {canConsumeForm, isCodeInRange} from '../util';
 import {SecurityAuthentication} from '../auth/auth';
 
 
-import { GetBalances200Response } from '../models/GetBalances200Response';
-import { GetBalancesAggregated200Response } from '../models/GetBalancesAggregated200Response';
-import { GetBalancesAggregated400Response } from '../models/GetBalancesAggregated400Response';
-import { ListAccounts400Response } from '../models/ListAccounts400Response';
+import { AggregateBalancesResponse } from '../models/AggregateBalancesResponse';
+import { BalancesCursorResponse } from '../models/BalancesCursorResponse';
+import { ErrorResponse } from '../models/ErrorResponse';
 
 /**
  * no description
@@ -25,7 +24,7 @@ export class BalancesApiRequestFactory extends BaseAPIRequestFactory {
      * @param ledger Name of the ledger.
      * @param address Filter balances involving given account, either as source or destination.
      * @param after Pagination cursor, will return accounts after given address, in descending order.
-     * @param paginationToken Parameter used in pagination requests.  Set to the value of next for the next page of results.  Set to the value of previous for the previous page of results.
+     * @param paginationToken Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results.
      */
     public async getBalances(ledger: string, address?: string, after?: string, paginationToken?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -63,12 +62,6 @@ export class BalancesApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["basicAuth"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
         
         const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
         if (defaultAuth?.applySecurityAuthentication) {
@@ -107,12 +100,6 @@ export class BalancesApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
-        let authMethod: SecurityAuthentication | undefined;
-        // Apply auth methods
-        authMethod = _config.authMethods["basicAuth"]
-        if (authMethod?.applySecurityAuthentication) {
-            await authMethod?.applySecurityAuthentication(requestContext);
-        }
         
         const defaultAuth: SecurityAuthentication | undefined = _options?.authMethods?.default || this.configuration?.authMethods?.default
         if (defaultAuth?.applySecurityAuthentication) {
@@ -133,29 +120,29 @@ export class BalancesApiResponseProcessor {
      * @params response Response returned by the server for a request to getBalances
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getBalances(response: ResponseContext): Promise<GetBalances200Response > {
+     public async getBalances(response: ResponseContext): Promise<BalancesCursorResponse > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: GetBalances200Response = ObjectSerializer.deserialize(
+            const body: BalancesCursorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "GetBalances200Response", ""
-            ) as GetBalances200Response;
+                "BalancesCursorResponse", ""
+            ) as BalancesCursorResponse;
             return body;
         }
-        if (isCodeInRange("400", response.httpStatusCode)) {
-            const body: ListAccounts400Response = ObjectSerializer.deserialize(
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "ListAccounts400Response", ""
-            ) as ListAccounts400Response;
-            throw new ApiException<ListAccounts400Response>(400, "Bad Request", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Error", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: GetBalances200Response = ObjectSerializer.deserialize(
+            const body: BalancesCursorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "GetBalances200Response", ""
-            ) as GetBalances200Response;
+                "BalancesCursorResponse", ""
+            ) as BalancesCursorResponse;
             return body;
         }
 
@@ -169,29 +156,29 @@ export class BalancesApiResponseProcessor {
      * @params response Response returned by the server for a request to getBalancesAggregated
      * @throws ApiException if the response code was not in [200, 299]
      */
-     public async getBalancesAggregated(response: ResponseContext): Promise<GetBalancesAggregated200Response > {
+     public async getBalancesAggregated(response: ResponseContext): Promise<AggregateBalancesResponse > {
         const contentType = ObjectSerializer.normalizeMediaType(response.headers["content-type"]);
         if (isCodeInRange("200", response.httpStatusCode)) {
-            const body: GetBalancesAggregated200Response = ObjectSerializer.deserialize(
+            const body: AggregateBalancesResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "GetBalancesAggregated200Response", ""
-            ) as GetBalancesAggregated200Response;
+                "AggregateBalancesResponse", ""
+            ) as AggregateBalancesResponse;
             return body;
         }
-        if (isCodeInRange("400", response.httpStatusCode)) {
-            const body: GetBalancesAggregated400Response = ObjectSerializer.deserialize(
+        if (isCodeInRange("0", response.httpStatusCode)) {
+            const body: ErrorResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "GetBalancesAggregated400Response", ""
-            ) as GetBalancesAggregated400Response;
-            throw new ApiException<GetBalancesAggregated400Response>(400, "Bad Request", body, response.headers);
+                "ErrorResponse", ""
+            ) as ErrorResponse;
+            throw new ApiException<ErrorResponse>(response.httpStatusCode, "Error", body, response.headers);
         }
 
         // Work around for missing responses in specification, e.g. for petstore.yaml
         if (response.httpStatusCode >= 200 && response.httpStatusCode <= 299) {
-            const body: GetBalancesAggregated200Response = ObjectSerializer.deserialize(
+            const body: AggregateBalancesResponse = ObjectSerializer.deserialize(
                 ObjectSerializer.parse(await response.body.text(), contentType),
-                "GetBalancesAggregated200Response", ""
-            ) as GetBalancesAggregated200Response;
+                "AggregateBalancesResponse", ""
+            ) as AggregateBalancesResponse;
             return body;
         }
 
