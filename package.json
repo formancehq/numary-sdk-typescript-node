@@ -1,6 +1,6 @@
 {
   "name": "@numaryhq/ledger-nodejs",
-  "version": "v1.9.3",
+  "version": "v1.10.0",
   "description": "OpenAPI client for @numaryhq/ledger-nodejs",
   "author": "OpenAPI-Generator Contributors",
   "repository": {
@@ -29,6 +29,7 @@
     "@types/node-fetch": "^2.5.7",
     "@types/node": "*",
     "form-data": "^2.5.0",
+    "btoa": "^1.2.1",
     "es6-promise": "^4.2.4",
     "url-parse": "^1.4.3"
   },
