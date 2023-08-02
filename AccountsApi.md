@@ -60,8 +60,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json; charset=utf-8
- - **Accept**: application/json; charset=utf-8
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -91,7 +91,7 @@ let body:ledger.AccountsApiCountAccountsRequest = {
   ledger: "ledger001",
   // string | Filter accounts by address pattern (regular expression placed between ^ and $). (optional)
   address: "users:.+",
-  // any | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  // any | Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]=value1&metadata[a.nested.key]=value2 (optional)
   metadata: {},
 };
 
@@ -107,7 +107,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **address** | [**string**] | Filter accounts by address pattern (regular expression placed between ^ and $). | (optional) defaults to undefined
- **metadata** | **any** | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
+ **metadata** | **any** | Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2 | (optional) defaults to undefined
 
 
 ### Return type
@@ -121,7 +121,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -178,7 +178,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -263,7 +263,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
