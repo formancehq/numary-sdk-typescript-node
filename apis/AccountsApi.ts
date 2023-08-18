@@ -58,7 +58,7 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
@@ -80,7 +80,7 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
      * Count the accounts from a ledger
      * @param ledger Name of the ledger.
      * @param address Filter accounts by address pattern (regular expression placed between ^ and $).
-     * @param metadata Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @param metadata Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
      */
     public async countAccounts(ledger: string, address?: string, metadata?: any, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
