@@ -87,7 +87,7 @@ export class ObservableAccountsApi {
      * Count the accounts from a ledger
      * @param ledger Name of the ledger.
      * @param address Filter accounts by address pattern (regular expression placed between ^ and $).
-     * @param metadata Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @param metadata Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
      */
     public countAccounts(ledger: string, address?: string, metadata?: any, _options?: Configuration): Observable<void> {
         const requestContextPromise = this.requestFactory.countAccounts(ledger, address, metadata, _options);
@@ -708,9 +708,10 @@ export class ObservableTransactionsApi {
      * Revert a ledger transaction by its ID
      * @param ledger Name of the ledger.
      * @param txid Transaction ID.
+     * @param disableChecks Allow to disable balances checks
      */
-    public revertTransaction(ledger: string, txid: number, _options?: Configuration): Observable<TransactionResponse> {
-        const requestContextPromise = this.requestFactory.revertTransaction(ledger, txid, _options);
+    public revertTransaction(ledger: string, txid: number, disableChecks?: boolean, _options?: Configuration): Observable<TransactionResponse> {
+        const requestContextPromise = this.requestFactory.revertTransaction(ledger, txid, disableChecks, _options);
 
         // build promise chain
         let middlewarePreObservable = from<RequestContext>(requestContextPromise);
