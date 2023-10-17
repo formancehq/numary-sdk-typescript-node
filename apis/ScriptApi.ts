@@ -57,7 +57,7 @@ export class ScriptApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
