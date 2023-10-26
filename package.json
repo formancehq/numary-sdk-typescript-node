@@ -1,6 +1,6 @@
 {
   "name": "@numaryhq/ledger-nodejs",
-  "version": "v1.9.3",
+  "version": "v1.10.14",
   "description": "OpenAPI client for @numaryhq/ledger-nodejs",
   "author": "OpenAPI-Generator Contributors",
   "repository": {

@@ -79,7 +79,7 @@ export interface AccountsApiCountAccountsRequest {
      */
     address?: string
     /**
-     * Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
      * @type any
      * @memberof AccountsApicountAccounts
      */
@@ -792,6 +792,12 @@ export interface TransactionsApiRevertTransactionRequest {
      * @memberof TransactionsApirevertTransaction
      */
     txid: number
+    /**
+     * Allow to disable balances checks
+     * @type boolean
+     * @memberof TransactionsApirevertTransaction
+     */
+    disableChecks?: boolean
 }
 
 export class ObjectTransactionsApi {
@@ -855,7 +861,7 @@ export class ObjectTransactionsApi {
      * @param param the request object
      */
     public revertTransaction(param: TransactionsApiRevertTransactionRequest, options?: Configuration): Promise<TransactionResponse> {
-        return this.api.revertTransaction(param.ledger, param.txid,  options).toPromise();
+        return this.api.revertTransaction(param.ledger, param.txid, param.disableChecks,  options).toPromise();
     }
 
 }
