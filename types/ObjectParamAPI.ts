@@ -79,7 +79,7 @@ export interface AccountsApiCountAccountsRequest {
      */
     address?: string
     /**
-     * Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
      * @type any
      * @memberof AccountsApicountAccounts
      */
@@ -291,6 +291,234 @@ export class ObjectBalancesApi {
 import { ObservableLedgerApi } from "./ObservableAPI";
 import { LedgerApiRequestFactory, LedgerApiResponseProcessor} from "../apis/LedgerApi";
 
+export interface LedgerApiAddMetadataOnTransactionRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApiaddMetadataOnTransaction
+     */
+    ledger: string
+    /**
+     * Transaction ID.
+     * @type number
+     * @memberof LedgerApiaddMetadataOnTransaction
+     */
+    txid: number
+    /**
+     * metadata
+     * @type { [key: string]: any; }
+     * @memberof LedgerApiaddMetadataOnTransaction
+     */
+    requestBody?: { [key: string]: any; }
+}
+
+export interface LedgerApiAddMetadataToAccountRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApiaddMetadataToAccount
+     */
+    ledger: string
+    /**
+     * Exact address of the account. It must match the following regular expressions pattern: &#x60;&#x60;&#x60; ^\\w+(:\\w+)*$ &#x60;&#x60;&#x60; 
+     * @type string
+     * @memberof LedgerApiaddMetadataToAccount
+     */
+    address: string
+    /**
+     * metadata
+     * @type { [key: string]: any; }
+     * @memberof LedgerApiaddMetadataToAccount
+     */
+    requestBody: { [key: string]: any; }
+}
+
+export interface LedgerApiCountAccountsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApicountAccounts
+     */
+    ledger: string
+    /**
+     * Filter accounts by address pattern (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApicountAccounts
+     */
+    address?: string
+    /**
+     * Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
+     * @type any
+     * @memberof LedgerApicountAccounts
+     */
+    metadata?: any
+}
+
+export interface LedgerApiCountTransactionsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApicountTransactions
+     */
+    ledger: string
+    /**
+     * Filter transactions by reference field.
+     * @type string
+     * @memberof LedgerApicountTransactions
+     */
+    reference?: string
+    /**
+     * Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApicountTransactions
+     */
+    account?: string
+    /**
+     * Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApicountTransactions
+     */
+    source?: string
+    /**
+     * Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApicountTransactions
+     */
+    destination?: string
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApicountTransactions
+     */
+    startTime?: Date
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). Deprecated, please use &#x60;startTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApicountTransactions
+     */
+    startTime2?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApicountTransactions
+     */
+    endTime?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). Deprecated, please use &#x60;endTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApicountTransactions
+     */
+    endTime2?: Date
+    /**
+     * Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @type any
+     * @memberof LedgerApicountTransactions
+     */
+    metadata?: any
+}
+
+export interface LedgerApiCreateTransactionRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApicreateTransaction
+     */
+    ledger: string
+    /**
+     * The request body must contain at least one of the following objects:   - &#x60;postings&#x60;: suitable for simple transactions   - &#x60;script&#x60;: enabling more complex transactions with Numscript 
+     * @type PostTransaction
+     * @memberof LedgerApicreateTransaction
+     */
+    postTransaction: PostTransaction
+    /**
+     * Set the preview mode. Preview mode doesn&#39;t add the logs to the database or publish a message to the message broker.
+     * @type boolean
+     * @memberof LedgerApicreateTransaction
+     */
+    preview?: boolean
+}
+
+export interface LedgerApiCreateTransactionsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApicreateTransactions
+     */
+    ledger: string
+    /**
+     * 
+     * @type Transactions
+     * @memberof LedgerApicreateTransactions
+     */
+    transactions: Transactions
+}
+
+export interface LedgerApiGetAccountRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetAccount
+     */
+    ledger: string
+    /**
+     * Exact address of the account. It must match the following regular expressions pattern: &#x60;&#x60;&#x60; ^\\w+(:\\w+)*$ &#x60;&#x60;&#x60; 
+     * @type string
+     * @memberof LedgerApigetAccount
+     */
+    address: string
+}
+
+export interface LedgerApiGetBalancesRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetBalances
+     */
+    ledger: string
+    /**
+     * Filter balances involving given account, either as source or destination.
+     * @type string
+     * @memberof LedgerApigetBalances
+     */
+    address?: string
+    /**
+     * Pagination cursor, will return accounts after given address, in descending order.
+     * @type string
+     * @memberof LedgerApigetBalances
+     */
+    after?: string
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. 
+     * @type string
+     * @memberof LedgerApigetBalances
+     */
+    cursor?: string
+    /**
+     * Parameter used in pagination requests. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. Deprecated, please use &#x60;cursor&#x60; instead.
+     * @type string
+     * @memberof LedgerApigetBalances
+     */
+    paginationToken?: string
+}
+
+export interface LedgerApiGetBalancesAggregatedRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetBalancesAggregated
+     */
+    ledger: string
+    /**
+     * Filter balances involving given account, either as source or destination.
+     * @type string
+     * @memberof LedgerApigetBalancesAggregated
+     */
+    address?: string
+}
+
+export interface LedgerApiGetInfoRequest {
+}
+
 export interface LedgerApiGetLedgerInfoRequest {
     /**
      * Name of the ledger.
@@ -298,6 +526,321 @@ export interface LedgerApiGetLedgerInfoRequest {
      * @memberof LedgerApigetLedgerInfo
      */
     ledger: string
+}
+
+export interface LedgerApiGetMappingRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetMapping
+     */
+    ledger: string
+}
+
+export interface LedgerApiGetTransactionRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApigetTransaction
+     */
+    ledger: string
+    /**
+     * Transaction ID.
+     * @type number
+     * @memberof LedgerApigetTransaction
+     */
+    txid: number
+}
+
+export interface LedgerApiListAccountsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApilistAccounts
+     */
+    ledger: string
+    /**
+     * The maximum number of results to return per page. 
+     * @type number
+     * @memberof LedgerApilistAccounts
+     */
+    pageSize?: number
+    /**
+     * The maximum number of results to return per page. Deprecated, please use &#x60;pageSize&#x60; instead. 
+     * @type number
+     * @memberof LedgerApilistAccounts
+     */
+    pageSize2?: number
+    /**
+     * Pagination cursor, will return accounts after given address, in descending order.
+     * @type string
+     * @memberof LedgerApilistAccounts
+     */
+    after?: string
+    /**
+     * Filter accounts by address pattern (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApilistAccounts
+     */
+    address?: string
+    /**
+     * Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @type any
+     * @memberof LedgerApilistAccounts
+     */
+    metadata?: any
+    /**
+     * Filter accounts by their balance (default operator is gte)
+     * @type number
+     * @memberof LedgerApilistAccounts
+     */
+    balance?: number
+    /**
+     * Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. 
+     * @type &#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;
+     * @memberof LedgerApilistAccounts
+     */
+    balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne'
+    /**
+     * Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. Deprecated, please use &#x60;balanceOperator&#x60; instead. 
+     * @type &#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;
+     * @memberof LedgerApilistAccounts
+     */
+    balanceOperator2?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne'
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. 
+     * @type string
+     * @memberof LedgerApilistAccounts
+     */
+    cursor?: string
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. Deprecated, please use &#x60;cursor&#x60; instead. 
+     * @type string
+     * @memberof LedgerApilistAccounts
+     */
+    paginationToken?: string
+}
+
+export interface LedgerApiListLogsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApilistLogs
+     */
+    ledger: string
+    /**
+     * The maximum number of results to return per page. 
+     * @type number
+     * @memberof LedgerApilistLogs
+     */
+    pageSize?: number
+    /**
+     * The maximum number of results to return per page. Deprecated, please use &#x60;pageSize&#x60; instead. 
+     * @type number
+     * @memberof LedgerApilistLogs
+     */
+    pageSize2?: number
+    /**
+     * Pagination cursor, will return the logs after a given ID. (in descending order).
+     * @type string
+     * @memberof LedgerApilistLogs
+     */
+    after?: string
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApilistLogs
+     */
+    startTime?: Date
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). Deprecated, please use &#x60;startTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApilistLogs
+     */
+    startTime2?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApilistLogs
+     */
+    endTime?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). Deprecated, please use &#x60;endTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApilistLogs
+     */
+    endTime2?: Date
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. 
+     * @type string
+     * @memberof LedgerApilistLogs
+     */
+    cursor?: string
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. Deprecated, please use &#x60;cursor&#x60; instead. 
+     * @type string
+     * @memberof LedgerApilistLogs
+     */
+    paginationToken?: string
+}
+
+export interface LedgerApiListTransactionsRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    ledger: string
+    /**
+     * The maximum number of results to return per page. 
+     * @type number
+     * @memberof LedgerApilistTransactions
+     */
+    pageSize?: number
+    /**
+     * The maximum number of results to return per page. Deprecated, please use &#x60;pageSize&#x60; instead. 
+     * @type number
+     * @memberof LedgerApilistTransactions
+     */
+    pageSize2?: number
+    /**
+     * Pagination cursor, will return transactions after given txid (in descending order).
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    after?: string
+    /**
+     * Find transactions by reference field.
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    reference?: string
+    /**
+     * Filter transactions with postings involving given account, either as source or destination (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    account?: string
+    /**
+     * Filter transactions with postings involving given account at source (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    source?: string
+    /**
+     * Filter transactions with postings involving given account at destination (regular expression placed between ^ and $).
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    destination?: string
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApilistTransactions
+     */
+    startTime?: Date
+    /**
+     * Filter transactions that occurred after this timestamp. The format is RFC3339 and is inclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; includes the first second of 4th minute). Deprecated, please use &#x60;startTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApilistTransactions
+     */
+    startTime2?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). 
+     * @type Date
+     * @memberof LedgerApilistTransactions
+     */
+    endTime?: Date
+    /**
+     * Filter transactions that occurred before this timestamp. The format is RFC3339 and is exclusive (for example, \&quot;2023-01-02T15:04:01Z\&quot; excludes the first second of 4th minute). Deprecated, please use &#x60;endTime&#x60; instead. 
+     * @type Date
+     * @memberof LedgerApilistTransactions
+     */
+    endTime2?: Date
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. 
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    cursor?: string
+    /**
+     * Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. Deprecated, please use &#x60;cursor&#x60; instead. 
+     * @type string
+     * @memberof LedgerApilistTransactions
+     */
+    paginationToken?: string
+    /**
+     * Filter transactions by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @type any
+     * @memberof LedgerApilistTransactions
+     */
+    metadata?: any
+}
+
+export interface LedgerApiReadStatsRequest {
+    /**
+     * name of the ledger
+     * @type string
+     * @memberof LedgerApireadStats
+     */
+    ledger: string
+}
+
+export interface LedgerApiRevertTransactionRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApirevertTransaction
+     */
+    ledger: string
+    /**
+     * Transaction ID.
+     * @type number
+     * @memberof LedgerApirevertTransaction
+     */
+    txid: number
+    /**
+     * Allow to disable balances checks
+     * @type boolean
+     * @memberof LedgerApirevertTransaction
+     */
+    disableChecks?: boolean
+}
+
+export interface LedgerApiRunScriptRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApirunScript
+     */
+    ledger: string
+    /**
+     * 
+     * @type Script
+     * @memberof LedgerApirunScript
+     */
+    script: Script
+    /**
+     * Set the preview mode. Preview mode doesn&#39;t add the logs to the database or publish a message to the message broker.
+     * @type boolean
+     * @memberof LedgerApirunScript
+     */
+    preview?: boolean
+}
+
+export interface LedgerApiUpdateMappingRequest {
+    /**
+     * Name of the ledger.
+     * @type string
+     * @memberof LedgerApiupdateMapping
+     */
+    ledger: string
+    /**
+     * 
+     * @type Mapping
+     * @memberof LedgerApiupdateMapping
+     */
+    mapping: Mapping
 }
 
 export class ObjectLedgerApi {
@@ -308,11 +851,168 @@ export class ObjectLedgerApi {
     }
 
     /**
+     * Set the metadata of a transaction by its ID
+     * @param param the request object
+     */
+    public addMetadataOnTransaction(param: LedgerApiAddMetadataOnTransactionRequest, options?: Configuration): Promise<void> {
+        return this.api.addMetadataOnTransaction(param.ledger, param.txid, param.requestBody,  options).toPromise();
+    }
+
+    /**
+     * Add metadata to an account
+     * @param param the request object
+     */
+    public addMetadataToAccount(param: LedgerApiAddMetadataToAccountRequest, options?: Configuration): Promise<void> {
+        return this.api.addMetadataToAccount(param.ledger, param.address, param.requestBody,  options).toPromise();
+    }
+
+    /**
+     * Count the accounts from a ledger
+     * @param param the request object
+     */
+    public countAccounts(param: LedgerApiCountAccountsRequest, options?: Configuration): Promise<void> {
+        return this.api.countAccounts(param.ledger, param.address, param.metadata,  options).toPromise();
+    }
+
+    /**
+     * Count the transactions from a ledger
+     * @param param the request object
+     */
+    public countTransactions(param: LedgerApiCountTransactionsRequest, options?: Configuration): Promise<void> {
+        return this.api.countTransactions(param.ledger, param.reference, param.account, param.source, param.destination, param.startTime, param.startTime2, param.endTime, param.endTime2, param.metadata,  options).toPromise();
+    }
+
+    /**
+     * Create a new transaction to a ledger
+     * @param param the request object
+     */
+    public createTransaction(param: LedgerApiCreateTransactionRequest, options?: Configuration): Promise<TransactionsResponse> {
+        return this.api.createTransaction(param.ledger, param.postTransaction, param.preview,  options).toPromise();
+    }
+
+    /**
+     * Create a new batch of transactions to a ledger
+     * @param param the request object
+     */
+    public createTransactions(param: LedgerApiCreateTransactionsRequest, options?: Configuration): Promise<TransactionsResponse> {
+        return this.api.createTransactions(param.ledger, param.transactions,  options).toPromise();
+    }
+
+    /**
+     * Get account by its address
+     * @param param the request object
+     */
+    public getAccount(param: LedgerApiGetAccountRequest, options?: Configuration): Promise<AccountResponse> {
+        return this.api.getAccount(param.ledger, param.address,  options).toPromise();
+    }
+
+    /**
+     * Get the balances from a ledger's account
+     * @param param the request object
+     */
+    public getBalances(param: LedgerApiGetBalancesRequest, options?: Configuration): Promise<BalancesCursorResponse> {
+        return this.api.getBalances(param.ledger, param.address, param.after, param.cursor, param.paginationToken,  options).toPromise();
+    }
+
+    /**
+     * Get the aggregated balances from selected accounts
+     * @param param the request object
+     */
+    public getBalancesAggregated(param: LedgerApiGetBalancesAggregatedRequest, options?: Configuration): Promise<AggregateBalancesResponse> {
+        return this.api.getBalancesAggregated(param.ledger, param.address,  options).toPromise();
+    }
+
+    /**
+     * Show server information
+     * @param param the request object
+     */
+    public getInfo(param: LedgerApiGetInfoRequest = {}, options?: Configuration): Promise<ConfigInfoResponse> {
+        return this.api.getInfo( options).toPromise();
+    }
+
+    /**
      * Get information about a ledger
      * @param param the request object
      */
     public getLedgerInfo(param: LedgerApiGetLedgerInfoRequest, options?: Configuration): Promise<LedgerInfoResponse> {
         return this.api.getLedgerInfo(param.ledger,  options).toPromise();
+    }
+
+    /**
+     * Get the mapping of a ledger
+     * @param param the request object
+     */
+    public getMapping(param: LedgerApiGetMappingRequest, options?: Configuration): Promise<MappingResponse> {
+        return this.api.getMapping(param.ledger,  options).toPromise();
+    }
+
+    /**
+     * Get transaction from a ledger by its ID
+     * @param param the request object
+     */
+    public getTransaction(param: LedgerApiGetTransactionRequest, options?: Configuration): Promise<TransactionResponse> {
+        return this.api.getTransaction(param.ledger, param.txid,  options).toPromise();
+    }
+
+    /**
+     * List accounts from a ledger, sorted by address in descending order.
+     * List accounts from a ledger
+     * @param param the request object
+     */
+    public listAccounts(param: LedgerApiListAccountsRequest, options?: Configuration): Promise<AccountsCursorResponse> {
+        return this.api.listAccounts(param.ledger, param.pageSize, param.pageSize2, param.after, param.address, param.metadata, param.balance, param.balanceOperator, param.balanceOperator2, param.cursor, param.paginationToken,  options).toPromise();
+    }
+
+    /**
+     * List the logs from a ledger, sorted by ID in descending order.
+     * List the logs from a ledger
+     * @param param the request object
+     */
+    public listLogs(param: LedgerApiListLogsRequest, options?: Configuration): Promise<LogsCursorResponse> {
+        return this.api.listLogs(param.ledger, param.pageSize, param.pageSize2, param.after, param.startTime, param.startTime2, param.endTime, param.endTime2, param.cursor, param.paginationToken,  options).toPromise();
+    }
+
+    /**
+     * List transactions from a ledger, sorted by txid in descending order.
+     * List transactions from a ledger
+     * @param param the request object
+     */
+    public listTransactions(param: LedgerApiListTransactionsRequest, options?: Configuration): Promise<TransactionsCursorResponse> {
+        return this.api.listTransactions(param.ledger, param.pageSize, param.pageSize2, param.after, param.reference, param.account, param.source, param.destination, param.startTime, param.startTime2, param.endTime, param.endTime2, param.cursor, param.paginationToken, param.metadata,  options).toPromise();
+    }
+
+    /**
+     * Get statistics from a ledger. (aggregate metrics on accounts and transactions) 
+     * Get statistics from a ledger
+     * @param param the request object
+     */
+    public readStats(param: LedgerApiReadStatsRequest, options?: Configuration): Promise<StatsResponse> {
+        return this.api.readStats(param.ledger,  options).toPromise();
+    }
+
+    /**
+     * Revert a ledger transaction by its ID
+     * @param param the request object
+     */
+    public revertTransaction(param: LedgerApiRevertTransactionRequest, options?: Configuration): Promise<TransactionResponse> {
+        return this.api.revertTransaction(param.ledger, param.txid, param.disableChecks,  options).toPromise();
+    }
+
+    /**
+     * This route is deprecated, and has been merged into `POST /{ledger}/transactions`. 
+     * Execute a Numscript
+     * @param param the request object
+     */
+    public runScript(param: LedgerApiRunScriptRequest, options?: Configuration): Promise<ScriptResponse> {
+        return this.api.runScript(param.ledger, param.script, param.preview,  options).toPromise();
+    }
+
+    /**
+     * Update the mapping of a ledger
+     * @param param the request object
+     */
+    public updateMapping(param: LedgerApiUpdateMappingRequest, options?: Configuration): Promise<MappingResponse> {
+        return this.api.updateMapping(param.ledger, param.mapping,  options).toPromise();
     }
 
 }
@@ -792,6 +1492,12 @@ export interface TransactionsApiRevertTransactionRequest {
      * @memberof TransactionsApirevertTransaction
      */
     txid: number
+    /**
+     * Allow to disable balances checks
+     * @type boolean
+     * @memberof TransactionsApirevertTransaction
+     */
+    disableChecks?: boolean
 }
 
 export class ObjectTransactionsApi {
@@ -855,7 +1561,7 @@ export class ObjectTransactionsApi {
      * @param param the request object
      */
     public revertTransaction(param: TransactionsApiRevertTransactionRequest, options?: Configuration): Promise<TransactionResponse> {
-        return this.api.revertTransaction(param.ledger, param.txid,  options).toPromise();
+        return this.api.revertTransaction(param.ledger, param.txid, param.disableChecks,  options).toPromise();
     }
 
 }
