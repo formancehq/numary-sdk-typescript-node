@@ -56,7 +56,7 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
@@ -206,7 +206,7 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
@@ -255,7 +255,7 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
@@ -446,8 +446,9 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
      * Revert a ledger transaction by its ID
      * @param ledger Name of the ledger.
      * @param txid Transaction ID.
+     * @param disableChecks Allow to disable balances checks
      */
-    public async revertTransaction(ledger: string, txid: number, _options?: Configuration): Promise<RequestContext> {
+    public async revertTransaction(ledger: string, txid: number, disableChecks?: boolean, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'ledger' is not null or undefined
@@ -462,6 +463,7 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
         }
 
 
+
         // Path Params
         const localVarPath = '/{ledger}/transactions/{txid}/revert'
             .replace('{' + 'ledger' + '}', encodeURIComponent(String(ledger)))
@@ -470,6 +472,11 @@ export class TransactionsApiRequestFactory extends BaseAPIRequestFactory {
         // Make Request Context
         const requestContext = _config.baseServer.makeRequestContext(localVarPath, HttpMethod.POST);
         requestContext.setHeaderParam("Accept", "application/json, */*;q=0.8")
+
+        // Query Params
+        if (disableChecks !== undefined) {
+            requestContext.setQueryParam("disableChecks", ObjectSerializer.serialize(disableChecks, "boolean", ""));
+        }
 
 
         
