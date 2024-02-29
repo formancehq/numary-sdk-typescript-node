@@ -60,8 +60,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json; charset=utf-8
- - **Accept**: application/json; charset=utf-8
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -91,7 +91,7 @@ let body:ledger.AccountsApiCountAccountsRequest = {
   ledger: "ledger001",
   // string | Filter accounts by address pattern (regular expression placed between ^ and $). (optional)
   address: "users:.+",
-  // any | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. (optional)
+  // any | Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]=value1&metadata[a.nested.key]=value2 (optional)
   metadata: {},
 };
 
@@ -107,7 +107,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **address** | [**string**] | Filter accounts by address pattern (regular expression placed between ^ and $). | (optional) defaults to undefined
- **metadata** | **any** | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
+ **metadata** | **any** | Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2 | (optional) defaults to undefined
 
 
 ### Return type
@@ -121,7 +121,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -178,7 +178,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -219,6 +219,8 @@ let body:ledger.AccountsApiListAccountsRequest = {
   metadata: {},
   // number | Filter accounts by their balance (default operator is gte) (optional)
   balance: 2400,
+  // string | Filter accounts by their balance asset (optional)
+  balanceAsset: "balanceAsset_example",
   // 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne' | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not.  (optional)
   balanceOperator: "gte",
   // 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne' | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. Deprecated, please use `balanceOperator` instead.  (optional)
@@ -246,6 +248,7 @@ Name | Type | Description  | Notes
  **address** | [**string**] | Filter accounts by address pattern (regular expression placed between ^ and $). | (optional) defaults to undefined
  **metadata** | **any** | Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below. | (optional) defaults to undefined
  **balance** | [**number**] | Filter accounts by their balance (default operator is gte) | (optional) defaults to undefined
+ **balanceAsset** | [**string**] | Filter accounts by their balance asset | (optional) defaults to undefined
  **balanceOperator** | [**&#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;**]**Array<&#39;gte&#39; &#124; &#39;lte&#39; &#124; &#39;gt&#39; &#124; &#39;lt&#39; &#124; &#39;e&#39; &#124; &#39;ne&#39; &#124; &#39;11184809&#39;>** | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not.  | (optional) defaults to undefined
  **balanceOperator2** | [**&#39;gte&#39; | &#39;lte&#39; | &#39;gt&#39; | &#39;lt&#39; | &#39;e&#39; | &#39;ne&#39;**]**Array<&#39;gte&#39; &#124; &#39;lte&#39; &#124; &#39;gt&#39; &#124; &#39;lt&#39; &#124; &#39;e&#39; &#124; &#39;ne&#39; &#124; &#39;11184809&#39;>** | Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. Deprecated, please use &#x60;balanceOperator&#x60; instead.  | (optional) defaults to undefined
  **cursor** | [**string**] | Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set.  | (optional) defaults to undefined
@@ -263,7 +266,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details

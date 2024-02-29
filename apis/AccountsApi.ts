@@ -58,7 +58,7 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
 
         // Body Params
         const contentType = ObjectSerializer.getPreferredMediaType([
-            "application/json; charset=utf-8"
+            "application/json"
         ]);
         requestContext.setHeaderParam("Content-Type", contentType);
         const serializedBody = ObjectSerializer.stringify(
@@ -80,7 +80,7 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
      * Count the accounts from a ledger
      * @param ledger Name of the ledger.
      * @param address Filter accounts by address pattern (regular expression placed between ^ and $).
-     * @param metadata Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
+     * @param metadata Filter accounts by metadata key value pairs. The filter can be used like this metadata[key]&#x3D;value1&amp;metadata[a.nested.key]&#x3D;value2
      */
     public async countAccounts(ledger: string, address?: string, metadata?: any, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
@@ -170,18 +170,20 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
      * @param address Filter accounts by address pattern (regular expression placed between ^ and $).
      * @param metadata Filter accounts by metadata key value pairs. Nested objects can be used as seen in the example below.
      * @param balance Filter accounts by their balance (default operator is gte)
+     * @param balanceAsset Filter accounts by their balance asset
      * @param balanceOperator Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. 
      * @param balanceOperator2 Operator used for the filtering of balances can be greater than/equal, less than/equal, greater than, less than, equal or not. Deprecated, please use &#x60;balanceOperator&#x60; instead. 
      * @param cursor Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. 
      * @param paginationToken Parameter used in pagination requests. Maximum page size is set to 15. Set to the value of next for the next page of results. Set to the value of previous for the previous page of results. No other parameters can be set when this parameter is set. Deprecated, please use &#x60;cursor&#x60; instead. 
      */
-    public async listAccounts(ledger: string, pageSize?: number, pageSize2?: number, after?: string, address?: string, metadata?: any, balance?: number, balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne', balanceOperator2?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne', cursor?: string, paginationToken?: string, _options?: Configuration): Promise<RequestContext> {
+    public async listAccounts(ledger: string, pageSize?: number, pageSize2?: number, after?: string, address?: string, metadata?: any, balance?: number, balanceAsset?: string, balanceOperator?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne', balanceOperator2?: 'gte' | 'lte' | 'gt' | 'lt' | 'e' | 'ne', cursor?: string, paginationToken?: string, _options?: Configuration): Promise<RequestContext> {
         let _config = _options || this.configuration;
 
         // verify required parameter 'ledger' is not null or undefined
         if (ledger === null || ledger === undefined) {
             throw new RequiredError("AccountsApi", "listAccounts", "ledger");
         }
+
 
 
 
@@ -230,6 +232,11 @@ export class AccountsApiRequestFactory extends BaseAPIRequestFactory {
         // Query Params
         if (balance !== undefined) {
             requestContext.setQueryParam("balance", ObjectSerializer.serialize(balance, "number", "int64"));
+        }
+
+        // Query Params
+        if (balanceAsset !== undefined) {
+            requestContext.setQueryParam("balanceAsset", ObjectSerializer.serialize(balanceAsset, "string", ""));
         }
 
         // Query Params
