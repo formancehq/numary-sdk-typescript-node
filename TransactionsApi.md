@@ -63,8 +63,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json; charset=utf-8
- - **Accept**: application/json; charset=utf-8
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -145,7 +145,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -229,8 +229,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json; charset=utf-8
- - **Accept**: application/json; charset=utf-8
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -304,8 +304,8 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json; charset=utf-8
- - **Accept**: application/json; charset=utf-8
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -362,7 +362,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -459,7 +459,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -489,6 +489,8 @@ let body:ledger.TransactionsApiRevertTransactionRequest = {
   ledger: "ledger001",
   // number | Transaction ID.
   txid: 1234,
+  // boolean | Allow to disable balances checks (optional)
+  disableChecks: true,
 };
 
 apiInstance.revertTransaction(body).then((data:any) => {
@@ -503,6 +505,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ledger** | [**string**] | Name of the ledger. | defaults to undefined
  **txid** | [**number**] | Transaction ID. | defaults to undefined
+ **disableChecks** | [**boolean**] | Allow to disable balances checks | (optional) defaults to undefined
 
 
 ### Return type
@@ -516,7 +519,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json; charset=utf-8
+ - **Accept**: application/json
 
 
 ### HTTP response details
